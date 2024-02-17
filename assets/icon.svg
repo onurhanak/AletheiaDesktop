@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="svg" version="1.1" viewBox="0 0 100 100" x="0px" y="0px"><style type="text/css">/* latin */
+@font-face {
+  font-family: 'Kristi';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/s/kristi/v21/uK_y4ricdeU6zwdhDRcS.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style><defs><clipPath id="circleClip"><circle cx="50" cy="50" r="50"/></clipPath><clipPath id="polygonClip"><polygon points=" 0,50 25,6.666666666666667 75,6.666666666666667 100,50 75,93.33333333333333 25,93.33333333333333 "/></clipPath></defs><polygon clip-path="url(#polygonClip)" fill="#f6f5f4" points=" 0,50 25,6.666666666666667 75,6.666666666666667 100,50 75,93.33333333333333 25,93.33333333333333 " stroke="#990033" stroke-width="8"/><image fill="#990033" height="44px" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgLTk2MCA5NjAgOTYwIiB3aWR0aD0iMjQiPjxwYXRoIGQ9Ik0yNDAtODBxLTMzIDAtNTYuNS0yMy41VDE2MC0xNjB2LTY0MHEwLTMzIDIzLjUtNTYuNVQyNDAtODgwaDQ4MHEzMyAwIDU2LjUgMjMuNVQ4MDAtODAwdjY0MHEwIDMzLTIzLjUgNTYuNVQ3MjAtODBIMjQwWm0wLTgwaDQ4MHYtNjQwaC04MHYyODBsLTEwMC02MC0xMDAgNjB2LTI4MEgyNDB2NjQwWm0wIDB2LTY0MCA2NDBabTIwMC0zNjAgMTAwLTYwIDEwMCA2MC0xMDAtNjAtMTAwIDYwWiIvPjwvc3ZnPg==" mask="url(#imageMask)" width="44px" x="28" y="28"/></svg>
