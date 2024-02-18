@@ -39,7 +39,7 @@ for:
 
   after_build:
   - ls dist
-  - tar -czvf aletheia-linux.tar.gz -C dist aletheia
+  - tar -czvf aletheia-linux.tar.gz -C dist Aletheia
 
   artifacts:
   - path: aletheia-linux.tar.gz
