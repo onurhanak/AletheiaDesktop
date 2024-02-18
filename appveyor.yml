@@ -24,6 +24,10 @@ deploy:
   on:
     APPVEYOR_REPO_TAG: true
 
+#
+#   Windows package
+# 
+for:
 
 #
 #   Linux package
@@ -34,17 +38,13 @@ deploy:
     - image: Ubuntu
 
   after_build:
-  - ls dist && tar -czvf aletheia-linux.tar.gz -C dist aletheia
+  - ls dist
+  - tar -czvf aletheia-linux.tar.gz -C dist aletheia
 
   artifacts:
   - path: aletheia-linux.tar.gz
 
 
-
-#
-#   Windows package
-# 
-for:
 -
   matrix:
     only:
@@ -55,4 +55,6 @@ for:
 
   artifacts:
   - path: aletheia-windows.zip
+
+
 
