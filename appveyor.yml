@@ -34,13 +34,11 @@ deploy:
     - image: Ubuntu
 
   after_build:
-  # Ensure that the 'aletheia' directory exists in 'dist' and modify the path accordingly
-  - ls dist  # This is for debugging, to check the contents of 'dist' directory
-  - tar -czvf aletheia-linux.tar.gz -C dist .
+  - ls dist
+  - tar -czvf aletheia-linux.tar.gz -C dist aletheia
 
   artifacts:
   - path: aletheia-linux.tar.gz
-
 
 
 
