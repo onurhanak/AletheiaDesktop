@@ -34,8 +34,7 @@ deploy:
     - image: Ubuntu
 
   after_build:
-  - ls dist
-  - tar -czvf aletheia-linux.tar.gz -C dist aletheia
+  - ls dist && tar -czvf aletheia-linux.tar.gz -C dist aletheia
 
   artifacts:
   - path: aletheia-linux.tar.gz
