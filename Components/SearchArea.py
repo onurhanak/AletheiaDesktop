@@ -1,5 +1,5 @@
 import flet as ft
-from Lib.libgendd.libgen_api_dd import LibgenSearch
+from libgen_api_enhanced import LibgenSearch
 
 
 class SearchArea:
