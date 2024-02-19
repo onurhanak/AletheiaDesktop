@@ -4,12 +4,12 @@ import flet as ft
 class Sidebar:
     def __init__(
         self,
-        page,
-        open_settings_callback,
-        open_search_callback,
-        open_library_callback,
-        open_favorites_callback,
-        open_downloads_callback,
+            page: object,
+            open_settings_callback: object,
+            open_search_callback: object,
+            open_library_callback: object,
+            open_favorites_callback: object,
+            open_downloads_callback: object,
     ):
 
         self.sidebar_items = [

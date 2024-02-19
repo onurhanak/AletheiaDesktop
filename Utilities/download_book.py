@@ -13,7 +13,7 @@ def get_downloaded_books(page):
 def update_library(page, book, file_path):
     already_downloaded_books = get_downloaded_books(page)
 
-    if type(book) != dict:
+    if not isinstance(book, dict):
         book_dict = {
             "book_id": book.book_id,
             "title": book.title,
@@ -26,11 +26,11 @@ def update_library(page, book, file_path):
             "download_link": book.download_link,
             "file_path": file_path,
         }
-    elif type(book) == dict:
+    else:
         book["file_path"] = file_path
         book_dict = book
 
-    if not book_dict in already_downloaded_books:
+    if book_dict not in already_downloaded_books:
         already_downloaded_books.append(book_dict)
         page.client_storage.set("downloaded_books", already_downloaded_books)
 
@@ -57,8 +57,9 @@ def download_book_from_favorites(book, library_location, page, download_progress
             if response.status_code == 200:
                 total_length = response.headers.get("content-length")
 
-                if total_length is None:  # no content length header
-                    file.write(response.content)
+                if total_length is None:
+                    with open(file_path, "wb") as file:
+                        file.write(response.content)
                 else:
                     dl = 0
                     total_length = int(total_length)
@@ -105,8 +106,9 @@ def download_book(book, library_location, page, download_progress):
             if response.status_code == 200:
                 total_length = response.headers.get("content-length")
 
-                if total_length is None:  # no content length header
-                    file.write(response.content)
+                if total_length is None:
+                    with open(file_path, "wb") as file:
+                        file.write(response.content)
                 else:
                     dl = 0
                     total_length = int(total_length)

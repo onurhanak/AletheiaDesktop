@@ -14,4 +14,4 @@ def load_theme(page):
         page.theme = ft.theme.Theme(color_scheme_seed="purple")
         page.theme_mode = "DARK"
 
-    return None
+    return

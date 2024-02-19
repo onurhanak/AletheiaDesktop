@@ -105,7 +105,7 @@ class AletheiaApp:
     def open_favorites_page(self, event=None):
         self.favorites = Favorites(
             self.page
-        )  # create a new instance so it will update with the faved books.
+        )  # create a new instance so it will update with the saved books.
         self.change_page_layout("/favorites", self.favorites.library_view)
 
     def open_downloads_page(self, event=None):
