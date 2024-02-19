@@ -16,7 +16,7 @@ from Utilities.initialize import initialization
 class AletheiaApp:
     def __init__(self, page: ft.Page):
         self.page = page
-        self.download_progress = {}  # Shared resource for tracking download progress
+        self.download_progress = {}  
         self.book_store = {}
         self.sidebar = Sidebar(
             self.page,
@@ -27,13 +27,13 @@ class AletheiaApp:
             self.open_downloads_page,
         )
 
-        self.results_instance = ResultsArea(self.page, self)
+        self.results_instance = ResultsArea(self.page, self, self.download_progress)
         self.main_view = MainView(self.page, self.results_instance)
         self.settings = Settings(self.page, self.sidebar)
         self.library = Library(self.page)
         self.downloads = DownloadsPage(
             self.page, self.download_progress
-        )  # Initialize DownloadsPage
+        )  
         self.favorites = Favorites(self.page)
         self.content_layout = ft.Column(
             controls=[self.main_view.main_area], expand=1, spacing=0
@@ -42,14 +42,16 @@ class AletheiaApp:
         self.setup_initial_view()
         self.setup_page_callbacks()
         initialization(page)
-        load_theme(page)
+        color_seed = self.page.client_storage.get("color_seed")
+        load_theme(page, color_seed)
 
     def setup_initial_view(self):
-        self.main_layout = self.create_main_layout()
+        self.main_layout = ft.Row(
+            controls=[self.sidebar.sidebar, ft.Column(controls=[self.main_view.search_area], expand=1)],
+            expand=1
+        )
         self.add_results_area()
-
-        initial_view = View(route="/", controls=[self.main_layout])
-        self.page.views.append(initial_view)
+        self.page.views.append(View(route="/", controls=[self.main_layout]))
         self.page.update()
 
     def create_main_layout(self):
@@ -129,21 +131,20 @@ class AletheiaApp:
         self.page.update()
 
     def route_change(self, e: RouteChangeEvent):
-        if e.route == "/":
-            self.open_search_page()
+        route_functions = {
+            "/": self.open_search_page,
+            "/settings": self.open_settings,
+            "/library": self.open_library_page,
+            "/favorites": self.open_favorites_page,
+            "/downloads": self.open_downloads_page
+        }
+        if e.route in route_functions:
+            route_functions[e.route]()
         elif e.route.startswith("/book/"):
             book_id = e.route.split("/")[2]
             book = self.book_store.get(book_id)
             if book:
                 self.display_book_details(book)
-        elif e.route.startswith("/settings"):
-            self.open_settings()
-        elif e.route.startswith("/library"):
-            self.open_library_page()
-        elif e.route.startswith("/favorites"):
-            self.open_favorites_page()
-        elif e.route.startswith("/downloads"):
-            self.open_downloads_page()
 
     def display_book_details(self, book):
         dialog = self.create_book_details_dialog(book)
@@ -211,6 +212,7 @@ class AletheiaApp:
         self.page.views.pop()
         top_view = self.page.views[-1]
         self.page.go(top_view.route)
+
 
 
 if __name__ == "__main__":

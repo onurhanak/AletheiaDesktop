@@ -63,13 +63,13 @@ def download_book_from_favorites(book, library_location, page, download_progress
                 else:
                     dl = 0
                     total_length = int(total_length)
-                    with open(file_path, "wb") as file:
+                    with open(file_path, "wb") as file:  # 4096 *
                         for data in response.iter_content(chunk_size=4096):
                             dl += len(data)
                             file.write(data)
-                            done = int(25 * dl / total_length)
+                            done = int(100 * dl / total_length)
                             download_progress[book.title] = done
-                            # Update the UI or status here
+                            page.update()
 
                 completion_message = f"'{book.title}' downloaded successfully!"
                 update_library(page, book, file_path)
@@ -115,9 +115,10 @@ def download_book(book, library_location, page, download_progress):
                     with open(file_path, "wb") as file:
                         for data in response.iter_content(chunk_size=4096):
                             dl += len(data)
-                            done = int(50 * dl / total_length)
-                            download_progress[book.book_id] = done
-                            # Update the UI or status here
+                            file.write(data)
+                            done = int(100 * dl / total_length)
+                            download_progress[book.title] = done
+                            page.update()
 
                 completion_message = f"'{book.title}' downloaded successfully!"
                 update_library(page, book, file_path)

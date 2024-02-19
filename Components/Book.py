@@ -3,7 +3,7 @@ from Utilities.download_book import download_book
 
 
 class Book:
-    def __init__(self, book_data, app, library_location, page):
+    def __init__(self, book_data, app, library_location, page, download_progress):
         self.app = app
         self.page = page
         self.book_id = book_data["ID"]
@@ -34,6 +34,7 @@ class Book:
                                         self,
                                         library_location,
                                         self.page,
+                                        download_progress
                                     ),
                                 ),
                                 ft.IconButton(

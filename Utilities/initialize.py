@@ -49,7 +49,7 @@ def initialization(page):
         page.client_storage.set("light_theme_selected", False)
         page.client_storage.set("downloaded_books", [])
         page.client_storage.set("favorites", [])
-        page.theme = ft.theme.Theme(color_scheme_seed="gray")
+        page.client_storage.set("color_seed", "purple")
         page.theme_mode = "DARK"
 
         ask_for_library_location(page)

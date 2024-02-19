@@ -58,9 +58,9 @@ class Sidebar:
         self.sidebar = ft.Container(
             content=ft.Column(
                 controls=self.sidebar_items,
-                alignment="CENTER",
-                horizontal_alignment="CENTER",
-                spacing=150,
+                alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=100,
             ),
             width=80,
             height=page.window_height,

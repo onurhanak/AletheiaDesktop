@@ -9,6 +9,8 @@ class SearchArea:
             bgcolor=ft.colors.WHITE,
             hint_text="Search",
             color=ft.colors.BLACK,
+            autofocus=True,  # Set autofocus to True
+            on_submit=lambda e: self.search_user_query(e, page, results_instance),  # Trigger search on Enter key press
         )
         self.search_button = ft.IconButton(
             icon=ft.icons.SEARCH,
@@ -16,8 +18,8 @@ class SearchArea:
             tooltip="Search on Libgen",
             on_click=lambda e: self.search_user_query(e, page, results_instance),
         )
-        self.loading_icon = ft.ProgressRing()  # Loading icon
-        self.loading_icon.visible = False  # Initially hidden
+        self.loading_icon = ft.ProgressRing()
+        self.loading_icon.visible = False
 
         self.search_area = ft.Container(
             content=ft.Row(

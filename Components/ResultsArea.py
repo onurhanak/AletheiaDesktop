@@ -3,7 +3,7 @@ from Components.Book import Book
 
 
 class ResultsArea:
-    def __init__(self, page, app):
+    def __init__(self, page, app, download_progress):
         self.results = ft.GridView(
             expand=1,
             runs_count=5,
@@ -12,6 +12,7 @@ class ResultsArea:
             spacing=5,
             run_spacing=5,
         )
+        self.download_progress = download_progress
         self.app = app
         self.page = page
         self.library_location = page.client_storage.get("library")
@@ -22,6 +23,6 @@ class ResultsArea:
     def populate_results(self, items, page, library_location):
         self.clear()
         for item in items:
-            book = Book(item, self.app, library_location, self.page)
+            book = Book(item, self.app, library_location, self.page, self.download_progress)
             self.results.controls.append(book.card)
         page.update()
