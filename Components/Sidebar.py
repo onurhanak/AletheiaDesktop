@@ -9,6 +9,7 @@ class Sidebar:
         open_search_callback,
         open_library_callback,
         open_favorites_callback,
+        open_downloads_callback,
     ):
 
         self.sidebar_items = [
@@ -35,6 +36,14 @@ class Sidebar:
                 icon_size=40,
                 selected_icon_color=ft.colors.RED,
                 tooltip="Favorites"
+            ),
+            ft.IconButton(
+                icon=ft.icons.DOWNLOADING_SHARP,
+                # icon_color=buttonBackground,
+                icon_size=40,
+                on_click=open_downloads_callback,
+                selected_icon_color=ft.colors.RED,
+                tooltip="Search"
             ),
             ft.IconButton(
                 icon=ft.icons.SETTINGS,

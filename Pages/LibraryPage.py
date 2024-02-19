@@ -10,8 +10,14 @@ class Library:
         self.display_books()
 
     def create_library_view(self):
-        # Create a layout for the library (e.g., a grid or a list)
-        return ft.GridView(
+        title = ft.Text("Library", size=32, weight=ft.FontWeight.BOLD)
+
+        title_container = ft.Row(
+            controls=[title],
+            alignment=ft.MainAxisAlignment.CENTER  # Center alignment for the row
+        )
+
+        grid_view = ft.GridView(
             expand=1,
             runs_count=5,
             max_extent=300,
@@ -20,17 +26,24 @@ class Library:
             run_spacing=5,
             padding=20
         )
+        
+        return ft.Column(
+            controls=[title_container, grid_view],
+            spacing=10
+        )
 
     def display_books(self):
-        self.library_view.controls.clear()
+        # Ensure you are referencing the GridView inside the Column
+        grid_view = self.library_view.controls[1]
+        grid_view.controls.clear()
 
         for book in self.downloaded_books:
             card = self.create_book_card(book)
-            self.library_view.controls.append(card)
+            grid_view.controls.append(card)
 
         # Update the page
         self.page.update()
-
+        
     def create_book_card(self, book):
         # Create a card for a single book
         card_width = 300

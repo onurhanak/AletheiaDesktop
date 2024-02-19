@@ -35,7 +35,7 @@ def update_library(page, book, file_path):
         page.client_storage.set("downloaded_books", already_downloaded_books)
 
 
-def download_book_from_favorites(book, library_location, page):
+def download_book_from_favorites(book, library_location, page, download_progress):
     def show_bottom_sheet(message):
         bottom_sheet = ft.BottomSheet(
             content=ft.Text(message, size=18),
@@ -46,47 +46,7 @@ def download_book_from_favorites(book, library_location, page):
         page.update()
 
     def download():
-        start_message = f"      Starting download of '{book['title']}'...      "
-        show_bottom_sheet(start_message)
-
-        download_url = book["download_link"]
-        file_path = (
-            f"{library_location}/{book['title']}-{book['author']}.{book['filetype']}"
-        )
-
-        try:
-            response = requests.get(download_url, stream=True)
-            if response.status_code == 200:
-                with open(file_path, "wb") as file:
-                    file.write(response.content)
-
-                completion_message = (
-                    f"      '{book['title']}' has been downloaded successfully!      "
-                )
-                update_library(page, book, file_path)
-            else:
-                completion_message = f"      Could not download '{book['title']}'      "
-
-        except Exception as e:
-            completion_message = f"      Error downloading '{book['title']}': {e}      "
-
-        show_bottom_sheet(completion_message)
-
-    threading.Thread(target=download).start()
-
-
-def download_book(book, library_location, page):
-    def show_bottom_sheet(message):
-        bottom_sheet = ft.BottomSheet(
-            content=ft.Text(message, size=18),
-            dismissible=True,
-        )
-        page.bottom_sheet = bottom_sheet
-        bottom_sheet.open = True
-        page.update()
-
-    def download():
-        start_message = f"      Starting download of '{book.title}'...      "
+        start_message = f"Starting download of '{book.title}'..."
         show_bottom_sheet(start_message)
 
         download_url = book.download_link
@@ -95,18 +55,75 @@ def download_book(book, library_location, page):
         try:
             response = requests.get(download_url, stream=True)
             if response.status_code == 200:
-                with open(file_path, "wb") as file:
+                total_length = response.headers.get("content-length")
+
+                if total_length is None:  # no content length header
                     file.write(response.content)
-                completion_message = (
-                    f"      '{book.title}' has been downloaded successfully!      "
-                )
-                show_bottom_sheet(completion_message)
+                else:
+                    dl = 0
+                    total_length = int(total_length)
+                    with open(file_path, "wb") as file:
+                        for data in response.iter_content(chunk_size=4096):
+                            dl += len(data)
+                            file.write(data)
+                            done = int(25 * dl / total_length)
+                            download_progress[book.title] = done
+                            # Update the UI or status here
+
+                completion_message = f"'{book.title}' downloaded successfully!"
                 update_library(page, book, file_path)
             else:
-                completion_message = f"      Could not download '{book.title}'      "
+                completion_message = f"Could not download '{book.title}'"
 
         except Exception as e:
-            completion_message = f"      Error downloading '{book.title}': {e}      "
+            completion_message = f"Error downloading '{book.title}': {e}"
+
+        show_bottom_sheet(completion_message)
+
+    threading.Thread(target=download).start()
+
+
+def download_book(book, library_location, page, download_progress):
+    def show_bottom_sheet(message):
+        bottom_sheet = ft.BottomSheet(
+            content=ft.Text(message, size=18),
+            dismissible=True,
+        )
+        page.bottom_sheet = bottom_sheet
+        bottom_sheet.open = True
+        page.update()
+
+    def download():
+        start_message = f"Starting download of '{book.title}'..."
+        show_bottom_sheet(start_message)
+
+        download_url = book.download_link
+        file_path = f"{library_location}/{book.title}-{book.author}.{book.filetype}"
+
+        try:
+            response = requests.get(download_url, stream=True)
+            if response.status_code == 200:
+                total_length = response.headers.get("content-length")
+
+                if total_length is None:  # no content length header
+                    file.write(response.content)
+                else:
+                    dl = 0
+                    total_length = int(total_length)
+                    with open(file_path, "wb") as file:
+                        for data in response.iter_content(chunk_size=4096):
+                            dl += len(data)
+                            done = int(50 * dl / total_length)
+                            download_progress[book.book_id] = done
+                            # Update the UI or status here
+
+                completion_message = f"'{book.title}' downloaded successfully!"
+                update_library(page, book, file_path)
+            else:
+                completion_message = f"Could not download '{book.title}'"
+
+        except Exception as e:
+            completion_message = f"Error downloading '{book.title}': {e}"
 
         show_bottom_sheet(completion_message)
 

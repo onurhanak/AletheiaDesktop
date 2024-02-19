@@ -5,6 +5,7 @@ class Settings:
     def __init__(self, page: ft.Page, sidebar):
         self.page = page
         self.sidebar = sidebar
+
         def folder_picker_result(e: ft.FilePickerResultEvent):
             print("Selected file or directory:", e.path)
 
@@ -43,8 +44,12 @@ class Settings:
             on_change=on_theme_change,
         )
 
+        # Title for the Settings page
+        title = ft.Text("Settings", size=32, weight=ft.FontWeight.BOLD, text_align="center")
+
         self.settings_layout = ft.Column(
             controls=[
+                title,  # Adding the title at the top
                 ft.Row(
                     controls=[
                         self.download_location_text,

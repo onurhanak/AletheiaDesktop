@@ -7,6 +7,7 @@ from Components.Sidebar import Sidebar
 from Pages.LibraryPage import Library
 from Pages.FavoritesPage import Favorites
 from Pages.SettingsPage import Settings
+from Pages.DownloadsPage import DownloadsPage
 from Utilities.download_book import download_book
 from Utilities.theme_utils import load_theme
 from Utilities.initialize import initialization
@@ -15,15 +16,24 @@ from Utilities.initialize import initialization
 class AletheiaApp:
     def __init__(self, page: ft.Page):
         self.page = page
+        self.download_progress = {}  # Shared resource for tracking download progress
         self.book_store = {}
         self.sidebar = Sidebar(
-            self.page, self.open_settings, self.open_search_page, self.open_library_page, self.open_favorites_page
+            self.page,
+            self.open_settings,
+            self.open_search_page,
+            self.open_library_page,
+            self.open_favorites_page,
+            self.open_downloads_page,
         )
 
         self.results_instance = ResultsArea(self.page, self)
         self.main_view = MainView(self.page, self.results_instance)
         self.settings = Settings(self.page, self.sidebar)
         self.library = Library(self.page)
+        self.downloads = DownloadsPage(
+            self.page, self.download_progress
+        )  # Initialize DownloadsPage
         self.favorites = Favorites(self.page)
         self.content_layout = ft.Column(
             controls=[self.main_view.main_area], expand=1, spacing=0
@@ -33,7 +43,6 @@ class AletheiaApp:
         self.setup_page_callbacks()
         initialization(page)
         load_theme(page)
-
 
     def setup_initial_view(self):
         self.main_layout = self.create_main_layout()
@@ -73,7 +82,7 @@ class AletheiaApp:
                 ft.Column(
                     controls=[
                         self.main_view.search_area,
-                        self.main_view.results_row  # Include the results row
+                        self.main_view.results_row,  # Include the results row
                     ],
                     expand=1,
                 ),
@@ -94,9 +103,17 @@ class AletheiaApp:
         self.change_page_layout("/library", self.library.library_view)
 
     def open_favorites_page(self, event=None):
-        self.favorites = Favorites(self.page)  # create a new instance so it will update with the faved books.
+        self.favorites = Favorites(
+            self.page
+        )  # create a new instance so it will update with the faved books.
         self.change_page_layout("/favorites", self.favorites.library_view)
 
+    def open_downloads_page(self, event=None):
+        # Create a new instance of DownloadsPage with the current download progress
+        self.downloads = DownloadsPage(self.page, self.download_progress)
+        downloads_view = self.downloads.render()
+
+        self.change_page_layout("/downloads", downloads_view)
 
     def open_settings(self, event=None):
         settings_view = self.settings.render()
@@ -125,6 +142,8 @@ class AletheiaApp:
             self.open_library_page()
         elif e.route.startswith("/favorites"):
             self.open_favorites_page()
+        elif e.route.startswith("/downloads"):
+            self.open_downloads_page()
 
     def display_book_details(self, book):
         dialog = self.create_book_details_dialog(book)
@@ -132,10 +151,13 @@ class AletheiaApp:
         dialog.open = True
         self.page.update()
 
-
     def create_book_details_dialog(self, book):
         book_cover = ft.Image(
-            src=book.cover, width=400, height=400, fit=ft.ImageFit.CONTAIN, border_radius=5
+            src=book.cover,
+            width=400,
+            height=400,
+            fit=ft.ImageFit.CONTAIN,
+            border_radius=5,
         )
         library_location = self.page.client_storage.get("library")
 
@@ -149,13 +171,16 @@ class AletheiaApp:
             ft.IconButton(
                 icon=ft.icons.DOWNLOAD,
                 on_click=lambda e: download_book(
-                    book, library_location, self.page
+                    book, library_location, self.page, self.download_progress
                 ),
             ),
         ]
 
         book_details_column = ft.Column(
-            controls=book_details_controls, expand=1, spacing=10, alignment=ft.MainAxisAlignment.CENTER,
+            controls=book_details_controls,
+            expand=1,
+            spacing=10,
+            alignment=ft.MainAxisAlignment.CENTER,
         )
 
         dialog_content = ft.Row(
@@ -163,7 +188,7 @@ class AletheiaApp:
             expand=1,
             alignment=ft.MainAxisAlignment.CENTER,
             width=800,
-            height=600
+            height=600,
         )
 
         # Create dialog
@@ -172,10 +197,9 @@ class AletheiaApp:
             modal=False,
             content_padding=20,
             inset_padding=0,
-            
         )
         return book_dialog
-    
+
     def close_dialog(self):
         self.page.dialog.open = False
         self.page.update()
