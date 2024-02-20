@@ -3,6 +3,6 @@ flet==0.20.1
 Requests==2.31.0
 setuptools==69.0.3
 libgen-api-enhanced==1.0.2
-pyinstaller
+PyInstaller
 flet-contrib
 plyer
