@@ -7,39 +7,52 @@ class DownloadsPage:
         self.page = page
 
         self.download_progress = download_progress
+        #self.page.on_resize = self.on_window_resize
         self.downloads_view = ft.Column(expand=1)  
-        self.ui_lock = threading.Lock()
-
-        #title = ft.Text("In-Progress Downloads", size=32, weight=ft.FontWeight.BOLD, text_align="center")
-
-        self.downloads_layout = ft.Column(
-            controls=[
-                #title,
-                self.downloads_view
-            ],
+        self.heading_text = ft.Text(
+                value="Downloads",  # Replace with your desired heading
+                size=25,  # Font size
+                weight="bold",  # Font weight
+                text_align="center",
+            )
+        self.content_column = ft.Column(
+            controls=[self.heading_text, self.downloads_view],
+            alignment=ft.MainAxisAlignment.CENTER,  # Center align the column vertically
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,  # Center align the column horizontally
             expand=1,
-            spacing=12,
         )
+        self.downloads_layout = ft.Container(
+            content=self.content_column,
+            #bgcolor=ft.colors.GREY,
+            height=page.window_height * 0.90,
+            width=page.window_width * 0.90,
+        )
+
+        self.ui_lock = threading.Lock()
 
         self.update_thread = threading.Thread(target=self.update_ui)
         self.update_thread.start()
-
     def update_ui(self):
         while True:
+            # Acquire lock and update UI (consider thread safety here)
             with self.ui_lock:
                 self.downloads_view.controls.clear()
 
                 current_progress = self.download_progress.copy()
 
                 for book_title, progress in current_progress.items():
-                    pb = ft.ProgressBar(value=progress, width=self.page.width/2, height=15)
-                    book_info = ft.Text(f"{book_title} - {progress}%", size=15)
-                    progress_bar = ft.Column([book_info, pb], spacing=5)
-                    self.downloads_view.controls.append(progress_bar)
+                    download_item = ft.ListTile(
+                        leading=ft.Icon(ft.icons.DOWNLOADING),
+                        title=ft.Text(book_title, size=15),  
+                        subtitle=ft.Text(f"Progress: {progress}%", size=15),
+                    )
+                    # Add download_item to downloads_view
+                    self.downloads_view.controls.append(download_item)
 
                 self.page.update()
 
             time.sleep(1) 
+
 
     def render(self):
         return self.downloads_layout

@@ -7,8 +7,36 @@ class Library:
         self.downloaded_books = page.client_storage.get("downloaded_books") or []
 
         self.library_view = self.create_library_view()
+        self.page.on_resize = self.on_window_resize
+        self.heading_text = ft.Text(
+                value="Library",  # Replace with your desired heading
+                size=25,  # Font size
+                weight="bold",  # Font weight
+                text_align="center",
+            )
+        content_column = ft.Column(
+            controls=[self.heading_text, self.library_view],
+            alignment=ft.MainAxisAlignment.CENTER,  # Center align the column vertically
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,  # Center align the column horizontally
+            expand=1,
+        )
+        self.library_container = ft.Container(
+            content=content_column,
+            #bgcolor=ft.colors.GREY,
+            height=page.window_height * 0.90,
+            width=page.window_width * 0.90,
+        )
+
         self.display_books()
 
+    def on_window_resize(self, event):
+        # Update the container size based on the new window size
+        self.library_container.height = self.page.window_height * 0.9
+        self.library_container.width = self.page.window_width * 0.9
+
+        # Update the page to apply changes
+        self.page.update()
+        
     def create_library_view(self):
         # Create a layout for the library (e.g., a grid or a list)
         return ft.GridView(

@@ -2,16 +2,45 @@ import flet as ft
 from Utilities.download_book import download_book_from_favorites
 
 class Favorites:
-    def __init__(self, page: ft.Page):
+    def __init__(self, page: ft.Page, download_progress):
         self.page = page
-
+        self.download_progress= download_progress
         self.favorite_books = page.client_storage.get("favorites") or []
         self.library_location = page.client_storage.get('library')
         self.library_view = self.create_library_view()
+
+        self.page.on_resize = self.on_window_resize
+        self.heading_text = ft.Text(
+                value="Favorites",  # Replace with your desired heading
+                size=25,  # Font size
+                weight="bold",  # Font weight
+                text_align="center",
+            )
+        content_column = ft.Column(
+            controls=[self.heading_text, self.library_view],
+            alignment=ft.MainAxisAlignment.CENTER,  # Center align the column vertically
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,  # Center align the column horizontally
+            expand=1,
+        )
+        self.library_container = ft.Container(
+            content=content_column,
+            #bgcolor=ft.colors.GREY,
+            height=page.window_height * 0.90,
+            width=page.window_width * 0.90,
+        )
+
         self.display_books()
 
+    def on_window_resize(self, event):
+        # Update the container size based on the new window size
+        self.library_container.height = self.page.window_height * 0.9
+        self.library_container.width = self.page.window_width * 0.9
+
+        # Update the page to apply changes
+        self.page.update()
+
     def create_library_view(self):
-        # Create a layout for the library (e.g., a grid or a list)
+
         return ft.GridView(
             expand=1,
             runs_count=5,
@@ -38,7 +67,7 @@ class Favorites:
 
         download_button = ft.IconButton(
             icon=ft.icons.DOWNLOAD,
-            on_click=lambda _: download_book_from_favorites(book, self.library_location, self.page),
+            on_click=lambda _: download_book_from_favorites(book, self.library_location, self.page, self.download_progress),
             icon_color=ft.colors.WHITE
         )
 
@@ -58,7 +87,7 @@ class Favorites:
                             width=card_width,
                             height=card_height,
                             fit=ft.ImageFit.FILL,
-                            border_radius=4,
+                            border_radius=0,
                         ),
                         blend_mode=ft.BlendMode.MULTIPLY,
                         shader=ft.RadialGradient(
@@ -109,4 +138,3 @@ class Favorites:
         self.favorite_books.remove(book)
         self.page.client_storage.set("favorites", self.favorite_books)
         self.display_books()
-    

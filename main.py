@@ -16,7 +16,7 @@ from Utilities.initialize import initialization
 class AletheiaApp:
     def __init__(self, page: ft.Page):
         self.page = page
-        self.download_progress = {}  
+        self.download_progress = {} 
         self.book_store = {}
         self.sidebar = Sidebar(
             self.page,
@@ -34,7 +34,7 @@ class AletheiaApp:
         self.downloads = DownloadsPage(
             self.page, self.download_progress
         )  
-        self.favorites = Favorites(self.page)
+        self.favorites = Favorites(self.page, self.download_progress)
         self.content_layout = ft.Column(
             controls=[self.main_view.main_area], expand=1, spacing=0
         )
@@ -104,15 +104,19 @@ class AletheiaApp:
     def open_library_page(self, event=None):
         self.sidebar.set_selected_button(self.sidebar.sidebar_items[1])
         self.library = Library(self.page)
-        self.change_page_layout("/library", self.library.library_view)
+        self.change_page_layout("/library", self.library.library_container)
 
     def open_favorites_page(self, event=None):
-        self.sidebar.set_selected_button(self.sidebar.sidebar_items[2])
+        try:
+            self.sidebar.set_selected_button(self.sidebar.sidebar_items[2])
 
-        self.favorites = Favorites(
-            self.page
-        )  # create a new instance so it will update with the saved books.
-        self.change_page_layout("/favorites", self.favorites.library_view)
+            self.favorites = Favorites(
+                self.page,
+                self.download_progress
+            )  # create a new instance so it will update with the saved books.
+            self.change_page_layout("/favorites", self.favorites.library_container)
+        except Exception as e:
+            print(e)
 
     def open_downloads_page(self, event=None):
         self.sidebar.set_selected_button(self.sidebar.sidebar_items[3])

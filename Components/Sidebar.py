@@ -43,7 +43,7 @@ class Sidebar:
                 icon_size=40,
                 on_click=open_downloads_callback,
                 selected_icon_color=self.selected_color,
-                tooltip="Search"
+                tooltip="Downloads"
             ),
             ft.IconButton(
                 icon=ft.icons.SETTINGS,
