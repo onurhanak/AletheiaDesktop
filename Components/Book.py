@@ -64,6 +64,7 @@ class Book:
 
     def save_to_favorites(self, e):
         favorites = self.app.page.client_storage.get("favorites")
+        print(favorites)
         book_dict = {
             "book_id": self.book_id,
             "title": self.title,

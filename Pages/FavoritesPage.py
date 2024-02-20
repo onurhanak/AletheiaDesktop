@@ -1,24 +1,18 @@
 import flet as ft
-import subprocess, os, platform
 from Utilities.download_book import download_book_from_favorites
 
 class Favorites:
     def __init__(self, page: ft.Page):
         self.page = page
+
         self.favorite_books = page.client_storage.get("favorites") or []
         self.library_location = page.client_storage.get('library')
         self.library_view = self.create_library_view()
         self.display_books()
 
     def create_library_view(self):
-        title = ft.Text("Favorites", size=32, weight=ft.FontWeight.BOLD)
-
-        title_container = ft.Row(
-            controls=[title],
-            alignment=ft.MainAxisAlignment.CENTER  # Center alignment for the row
-        )
-
-        grid_view = ft.GridView(
+        # Create a layout for the library (e.g., a grid or a list)
+        return ft.GridView(
             expand=1,
             runs_count=5,
             max_extent=300,
@@ -27,20 +21,13 @@ class Favorites:
             run_spacing=5,
             padding=20
         )
-        
-        return ft.Column(
-            controls=[title_container, grid_view],
-            spacing=10
-        )
 
     def display_books(self):
-        # Ensure you are referencing the GridView inside the Column
-        grid_view = self.library_view.controls[1]
-        grid_view.controls.clear()
+        self.library_view.controls.clear()
 
         for book in self.favorite_books:
             card = self.create_book_card(book)
-            grid_view.controls.append(card)
+            self.library_view.controls.append(card)
 
         # Update the page
         self.page.update()

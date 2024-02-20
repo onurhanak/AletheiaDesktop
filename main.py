@@ -77,6 +77,7 @@ class AletheiaApp:
 
     def open_search_page(self, event=None):
         self.page.views.clear()
+        self.sidebar.set_selected_button(self.sidebar.sidebar_items[0])
 
         main_layout = ft.Row(
             controls=[
@@ -101,16 +102,21 @@ class AletheiaApp:
         self.page.update()
 
     def open_library_page(self, event=None):
+        self.sidebar.set_selected_button(self.sidebar.sidebar_items[1])
         self.library = Library(self.page)
         self.change_page_layout("/library", self.library.library_view)
 
     def open_favorites_page(self, event=None):
+        self.sidebar.set_selected_button(self.sidebar.sidebar_items[2])
+
         self.favorites = Favorites(
             self.page
         )  # create a new instance so it will update with the saved books.
         self.change_page_layout("/favorites", self.favorites.library_view)
 
     def open_downloads_page(self, event=None):
+        self.sidebar.set_selected_button(self.sidebar.sidebar_items[3])
+
         # Create a new instance of DownloadsPage with the current download progress
         self.downloads = DownloadsPage(self.page, self.download_progress)
         downloads_view = self.downloads.render()
@@ -118,6 +124,8 @@ class AletheiaApp:
         self.change_page_layout("/downloads", downloads_view)
 
     def open_settings(self, event=None):
+        self.sidebar.set_selected_button(self.sidebar.sidebar_items[4])
+
         settings_view = self.settings.render()
         self.change_page_layout("/settings", settings_view)
 

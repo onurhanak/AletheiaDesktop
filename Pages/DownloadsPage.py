@@ -5,15 +5,16 @@ import time
 class DownloadsPage:
     def __init__(self, page: ft.Page, download_progress):
         self.page = page
+
         self.download_progress = download_progress
         self.downloads_view = ft.Column(expand=1)  
         self.ui_lock = threading.Lock()
 
-        title = ft.Text("In-Progress Downloads", size=32, weight=ft.FontWeight.BOLD, text_align="center")
+        #title = ft.Text("In-Progress Downloads", size=32, weight=ft.FontWeight.BOLD, text_align="center")
 
         self.downloads_layout = ft.Column(
             controls=[
-                title,
+                #title,
                 self.downloads_view
             ],
             expand=1,

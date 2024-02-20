@@ -11,46 +11,46 @@ class Sidebar:
             open_favorites_callback: object,
             open_downloads_callback: object,
     ):
-
+        self.selected_color = page.client_storage.get('color_seed')
         self.sidebar_items = [
             ft.IconButton(
                 icon=ft.icons.SEARCH_SHARP,
-                # icon_color=buttonBackground,
+                
                 icon_size=40,
                 on_click=open_search_callback,
-                selected_icon_color=ft.colors.RED,
+                selected_icon_color=self.selected_color,
+                selected=True,
                 tooltip="Search"
             ),
             ft.IconButton(
                 icon=ft.icons.LIBRARY_BOOKS,
-                # icon_color=buttonBackground,
                 on_click=open_library_callback,  # Use the passed callback
                 icon_size=40,
-                selected_icon_color=ft.colors.RED,
+                selected_icon_color=self.selected_color,
                 tooltip="Library"
             ),
             ft.IconButton(
                 icon=ft.icons.FAVORITE,
-                # icon_color=buttonBackground,
+                
                 on_click=open_favorites_callback,  # Use the passed callback
                 icon_size=40,
-                selected_icon_color=ft.colors.RED,
+                selected_icon_color=self.selected_color,
                 tooltip="Favorites"
             ),
             ft.IconButton(
                 icon=ft.icons.DOWNLOADING_SHARP,
-                # icon_color=buttonBackground,
+                
                 icon_size=40,
                 on_click=open_downloads_callback,
-                selected_icon_color=ft.colors.RED,
+                selected_icon_color=self.selected_color,
                 tooltip="Search"
             ),
             ft.IconButton(
                 icon=ft.icons.SETTINGS,
-                # icon_color=buttonBackground,
+                
                 icon_size=40,
                 on_click=open_settings_callback,  # Use the passed callback
-                selected_icon_color=ft.colors.RED,
+                selected_icon_color=self.selected_color,
                 tooltip="Settings"
             ),
         ]
@@ -66,3 +66,7 @@ class Sidebar:
             height=page.window_height,
             border_radius=10,
         )
+    
+    def set_selected_button(self, selected_button):
+        for button in self.sidebar_items:
+            button.selected = (button == selected_button)
