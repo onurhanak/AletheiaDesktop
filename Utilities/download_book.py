@@ -1,7 +1,7 @@
 import flet as ft
 import threading
 import requests
-
+from Utilities.notify import create_notification
 
 def get_downloaded_books(page):
     books = page.client_storage.get("downloaded_books")
@@ -36,18 +36,10 @@ def update_library(page, book, file_path):
 
 
 def download_book_from_favorites(book, library_location, page, download_progress):
-    def show_bottom_sheet(message):
-        bottom_sheet = ft.BottomSheet(
-            content=ft.Text(message, size=18),
-            dismissible=True,
-        )
-        page.bottom_sheet = bottom_sheet
-        bottom_sheet.open = True
-        page.update()
 
     def download():
-        start_message = f"Starting download of '{book.title}'..."
-        show_bottom_sheet(start_message)
+        create_notification(f"{book.title}", "Starting download")
+
 
         download_url = book.download_link
         file_path = f"{library_location}/{book.title}-{book.author}.{book.filetype}"
@@ -71,32 +63,24 @@ def download_book_from_favorites(book, library_location, page, download_progress
                             download_progress[book.title] = done
                             page.update()
 
-                completion_message = f"'{book.title}' downloaded successfully!"
+                completion_message = [book.title, "Download successful."]
                 update_library(page, book, file_path)
             else:
-                completion_message = f"Could not download '{book.title}'"
+                completion_message = [book.title, "Download failed."]
 
         except Exception as e:
-            completion_message = f"Error downloading '{book.title}': {e}"
+                completion_message = [book.title, f"Download failed. Error: {e}"]
 
-        show_bottom_sheet(completion_message)
+        create_notification(completion_message[0], create_notification[1])
+
 
     threading.Thread(target=download).start()
 
 
 def download_book(book, library_location, page, download_progress):
-    def show_bottom_sheet(message):
-        bottom_sheet = ft.BottomSheet(
-            content=ft.Text(message, size=18),
-            dismissible=True,
-        )
-        page.bottom_sheet = bottom_sheet
-        bottom_sheet.open = True
-        page.update()
 
     def download():
-        start_message = f"Starting download of '{book.title}'..."
-        show_bottom_sheet(start_message)
+        create_notification(f"{book.title}", "Starting download")
 
         download_url = book.download_link
         file_path = f"{library_location}/{book.title}-{book.author}.{book.filetype}"
@@ -120,14 +104,14 @@ def download_book(book, library_location, page, download_progress):
                             download_progress[book.title] = done
                             page.update()
 
-                completion_message = f"'{book.title}' downloaded successfully!"
+                completion_message = [book.title, "Download successful."]
                 update_library(page, book, file_path)
             else:
-                completion_message = f"Could not download '{book.title}'"
+                completion_message = [book.title, "Download failed."]
 
         except Exception as e:
-            completion_message = f"Error downloading '{book.title}': {e}"
+            completion_message = [book.title, f"Download failed. Error: {e}"]
 
-        show_bottom_sheet(completion_message)
+        create_notification(completion_message[0], create_notification[1])
 
     threading.Thread(target=download).start()

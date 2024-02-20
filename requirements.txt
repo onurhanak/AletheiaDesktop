@@ -7,3 +7,4 @@ libgen-api-enhanced==1.0.1
 pillow
 pyinstaller
 flet-contrib
+plyer

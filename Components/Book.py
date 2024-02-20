@@ -1,6 +1,6 @@
 import flet as ft
 from Utilities.download_book import download_book
-
+from Utilities.notify import create_notification
 
 class Book:
     def __init__(self, book_data, app, library_location, page, download_progress):
@@ -23,7 +23,7 @@ class Book:
                     [
                         ft.ListTile(
                             title=ft.Text(self.title),
-                            subtitle=ft.Text(self.author),
+                            subtitle=ft.Text(f"{self.author}\n{self.filetype.upper()}"),
                             height=200,
                         ),
                         ft.Row(
@@ -64,7 +64,6 @@ class Book:
 
     def save_to_favorites(self, e):
         favorites = self.app.page.client_storage.get("favorites")
-        print(favorites)
         book_dict = {
             "book_id": self.book_id,
             "title": self.title,
@@ -76,6 +75,9 @@ class Book:
             "cover": self.cover,
             "download_link": self.download_link,
         }
+
+
         if not book_dict in favorites:
             favorites.append(book_dict)
             self.app.page.client_storage.set("favorites", favorites)
+            create_notification(f"{book_dict['title']}", "Added to favorites")
