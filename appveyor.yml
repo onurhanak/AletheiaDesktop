@@ -28,23 +28,6 @@ deploy:
 #   Windows package
 # 
 for:
-
-#
-#   Linux package
-# 
--
-  matrix:
-    only:
-    - image: Ubuntu
-
-  after_build:
-  - ls dist
-  - tar -czvf aletheia-linux.tar.gz -C dist Aletheia
-
-  artifacts:
-  - path: aletheia-linux.tar.gz
-
-
 -
   matrix:
     only:
@@ -56,5 +39,30 @@ for:
   artifacts:
   - path: aletheia-windows.zip
 
+#
+#   macOS package
+# 
+-
+  matrix:
+    only:
+    - image: macOS
 
+  after_build:
+  - tar -czvf aletheia-macos.tar.gz -C dist aletheia.app
 
+  artifacts:
+  - path: aletheia-macos.tar.gz
+
+#
+#   Linux package
+# 
+-
+  matrix:
+    only:
+    - image: Ubuntu
+
+  after_build:
+  - tar -czvf aletheia-linux.tar.gz -C dist Aletheia
+
+  artifacts:
+  - path: aletheia-linux.tar.gz
