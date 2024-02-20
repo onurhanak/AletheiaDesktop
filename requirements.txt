@@ -6,3 +6,4 @@ libgen-api-enhanced==1.0.2
 PyInstaller
 flet-contrib
 plyer
+Pillow
