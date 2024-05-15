@@ -1,0 +1,4 @@
+Eel==0.16.0
+gevent==24.2.1
+libgen_api_enhanced==1.0.2
+Requests==2.31.0
