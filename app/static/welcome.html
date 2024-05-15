@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Aletheia Library</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #343a40;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            animation: fadeIn 1s ease-in-out;
+            width: 100%; /* Ensures the container takes the full width */
+            max-width: 600px; /* Maximum width of the container */
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .welcome-text {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #6c757d;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            max-width: 300px; /* Maximum width for the button */
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center; /* Centers the button horizontally */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <h1 class="mb-3 text-center">Welcome to Aletheia Library</h1>
+                <p class="welcome-text">Where do you want your library?</p>
+                <form onsubmit="return redirect();">
+                    <div class="button-container">
+                        <button onclick="askForDirectory()" type="button" class="btn btn-primary btn-lg">Select Directory</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="/eel.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function askForDirectory() {
+            eel.select_directory();
+        }
+        
+        eel.expose(redirect);
+        function redirect() {
+            window.location.href = "splash.html";  // Redirects to the main page after directory selection
+            return false; // Prevent form submission
+        }
+    </script>
+</body>
+</html>

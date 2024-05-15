@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Search with Loading Animation</title>
+
+    <script type="text/javascript" src="/eel.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div id="navbar">
+        <div class="nav flex-column justify-content-center align-items-center gap-5">
+          <a href="index.html"><i class="fa fa-3x fa-home"></i></a>
+          <a href="settings.html"><i class="fa fa-3x fa-cog"></i></a>
+          <a href="favorites.html"><i class="fa fa-3x fa-star"></i></a>
+          <a href="library.html"><i class="fa fa-3x fa-download"></i></a>
+        </div>
+    </div>
+    <div id="main-content">
+        <h1 class="text-light p-5">Settings</h1>
+        <form id="settingsForm" class="p-5">
+            <div class="mb-3">
+                <label for="downloadLocation" class="form-label text-light">Download Location:</label>
+                <div class="button-container">
+                    <button onclick="askForDirectory()" type="button" class="btn btn-primary">Select Directory</button>
+                </div>            </div>
+            <button type="button" onclick="saveSettings()" class="btn btn-primary">Save Changes</button>
+        </form>
+      </div>
+
+    <script>
+        eel.expose(saveSettings);
+        function saveSettings() {
+            var downloadPath = document.getElementById('downloadLocation').value;
+            eel.save_settings(downloadPath);
+            location.reload();
+        }
+        function askForDirectory() {
+            eel.select_directory();
+        }
+        
+        async function getLibraryLocation() {
+            const libraryLocation = await eel.get_library_location()();
+            document.querySelector('label[for="downloadLocation"]').textContent = `Download Location: ${libraryLocation}`;
+        }
+
+        getLibraryLocation()
+
+    </script>
+
+</body>
+
+</html>

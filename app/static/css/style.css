@@ -1,0 +1,152 @@
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    }
+
+
+body,
+html {
+  height: 100%;
+  margin: 0;
+  background-color: #121212;
+  overflow-y: scroll;
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none;  /* For Internet Explorer and Edge */
+}
+
+html::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
+}
+
+#navbar {
+  width: 100px;
+  position: fixed;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.fa-3x {
+  margin: 5px !important;
+}
+
+.nav-link {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+#main-content {
+  margin-left: 100px;
+  background-color: #121212 !important;
+}
+
+.search-bar {
+  padding: 20px 15px;
+  background-color: #121212;
+  display: flex;
+  justify-content: center;
+}
+
+.search-bar .form-control {
+  width: 50%;
+}
+
+.container-fluid {
+  padding: 0;
+}
+
+.main-container {
+  max-width: 1200px; 
+  display: flex; 
+  justify-content: center;
+}
+
+.card {
+  background-color: rgba(0, 0, 0, 0.95);
+  color: white;
+  min-height: 300px;
+  height: 300px;
+  max-height: 300px;
+  max-width: 300px;
+  border: 2px solid white;
+}
+
+.card-background {
+  background-size: cover;
+  background-position: center;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0.5;
+  border-radius: 5px;
+}
+
+.card-body {
+  position: relative;
+  z-index: 2;
+}
+
+.card-text {
+  font-weight: bold !important;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+}
+
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: -60px 0 0 -60px;
+  display: none;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.notification-box {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #eeeeee;
+  color: #000000;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 4px 6px rgba(129, 129, 129, 0.1);
+  z-index: 1000;
+  width: 300px;
+}
+
+.notification-box p {
+  margin: 0;
+}
+
+.notification-box button {
+  background: #888;
+  border: none;
+  padding: 5px 10px;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  float: right;
+}
