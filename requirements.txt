@@ -4,3 +4,4 @@ libgen_api_enhanced==1.0.2
 Requests==2.31.0
 lxml
 bottle-websocket
+pyinstaller
