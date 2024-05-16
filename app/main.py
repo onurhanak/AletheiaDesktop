@@ -2,8 +2,9 @@ import json
 import os
 import subprocess
 import sys
-import threading
 from pathlib import Path
+import gevent
+import threading
 
 import eel
 import requests
@@ -11,8 +12,6 @@ import tkinter as tk
 from tkinter import filedialog
 from libgen_api_enhanced import LibgenSearch
 
-
-# Initialize the Eel library with the path to static files
 eel.init("./static")
 
 USER_HOME_DIR = str(Path.home())
@@ -77,7 +76,7 @@ def open_file_with_default_program(book_title):
     try:
         with open(SETTINGS_FILE, 'r') as file:
             records = json.load(file)
-        file_path = next(book["file_path"] for book in records['downloads'] if book['title'] == book_title)
+        file_path = next(book["file_path"] for book in records['downloads'] if book['Title'] == book_title)
 
         if sys.platform == "win32":
             os.startfile(file_path)
@@ -124,11 +123,6 @@ def search_books(query, query_type):
         eel.showNotification(f"Error searching books: {e}")
 
 
-@eel.expose
-def download_book_thread(book):
-    eel.spawn(download_book, book) 
-
-
 def download_book(book):
     try:
         download_link = book["Direct_Download_Link"]
@@ -136,7 +130,7 @@ def download_book(book):
         book_extension = book["Extension"]
         book_author = book["Author"]
 
-        response = requests.get(download_link)
+        response = requests.get(download_link, stream=True)
         response.raise_for_status()
 
         with open(SETTINGS_FILE, 'r') as file:
@@ -144,17 +138,65 @@ def download_book(book):
 
         save_path = settings['download_path']
         file_path = os.path.join(save_path, f"{book_title}.{book_extension}")
-        book['file_path'] = file_path 
+        book['file_path'] = file_path
+
         with open(file_path, 'wb') as file:
-            file.write(response.content)
+            for chunk in response.iter_content(chunk_size=8192):
+                file.write(chunk)
 
         eel.showNotification(f"{book_title} by {book_author} downloaded successfully.")
         update_records(book, True)
     except requests.RequestException as e:
+        print(e)
         eel.showNotification(f'Failed to download {book_title}: {e}')
     except Exception as e:
+        print(e)
         eel.showNotification(f'Failed to download {book_title}: {e}')
-import gevent
+
+
+
+@eel.expose
+def unfavorite_book(book_title):
+
+    try:
+        with open(SETTINGS_FILE, 'r') as file:
+            settings = json.load(file)
+
+        settings['favorites'] = [book for book in settings['favorites'] if book['Title'] != book_title]
+        
+        with open(SETTINGS_FILE, 'w') as file:
+            json.dump(settings, file)
+
+        eel.showNotification(f'Removed {book_title} from favorites.')
+    except Exception as e:
+        eel.showNotification(f'Failed to remove {book_title} from favorites : {e}')
+
+@eel.expose
+def delete_book(book_title):
+
+    try:
+        with open(SETTINGS_FILE, 'r') as file:
+            settings = json.load(file)
+
+        to_delete = [book['file_path'] for book in settings['downloads'] if book['Title'] == book_title][0]
+        
+        os.remove(to_delete)
+
+        settings['downloads'] = [book for book in settings['downloads'] if book['Title'] != book_title]
+        
+        with open(SETTINGS_FILE, 'w') as file:
+            json.dump(settings, file)
+
+        eel.showNotification(f'Deleted {book_title}')
+    except Exception as e:
+        eel.showNotification(f'Failed to delelete {book_title} : {e}')
+
+
+@eel.expose
+def download_book_thread(book):
+    download_thread = threading.Thread(target=download_book, args=(book,))
+    download_thread.start()
+
 def start_app():
     if check_first_run():
         eel.start('welcome.html', block=False, mode="chrome")
