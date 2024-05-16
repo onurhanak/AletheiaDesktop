@@ -137,7 +137,8 @@ def download_book(book):
             settings = json.load(file)
 
         save_path = settings['download_path']
-        file_path = os.path.join(save_path, f"{book_title}.{book_extension}")
+        file_path = os.path.normpath(os.path.join(save_path, f"{book_title}.{book_extension}"))
+
         book['file_path'] = file_path
 
         with open(file_path, 'wb') as file:
